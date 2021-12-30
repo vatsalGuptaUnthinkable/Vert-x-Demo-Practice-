@@ -27,7 +27,6 @@ public class App
             response.putHeader("content-type", "text/plain");
             response.end("Hello World from Vatsal");
         });
-
         server.requestHandler(router).listen(8080);
     }
 }
