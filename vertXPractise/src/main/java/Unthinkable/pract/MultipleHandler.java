@@ -12,36 +12,36 @@ public class MultipleHandler {
         HttpServer server =vertx.createHttpServer();
         Router router = Router.router(vertx);
         Route route = router.route("/multiple");
-        route.handler(ctx -> {
+        route.handler(req -> {
 
-            HttpServerResponse response = ctx.response();
+            HttpServerResponse response = req.response();
             // enable chunked responses because we will be adding data as
             // we execute over other handlers. This is only required once and
             // only if several handlers do output.
             response.setChunked(true);
 
-            response.write("route1\n");
+            response.write("Response from 1st five second \n");
 
             // Call the next matching route after a 5 second delay
-            ctx.vertx().setTimer(5000, tid -> ctx.next());
+            req.vertx().setTimer(5000, tid -> req.next());
         });
 
-        route.handler(ctx -> {
+        route.handler(req -> {
 
-            HttpServerResponse response = ctx.response();
-            response.write("route2\n");
+            HttpServerResponse response = req.response();
+            response.write("Response from 2nd five second \n");
 
             // Call the next matching route after a 5 second delay
-            ctx.vertx().setTimer(5000, tid -> ctx.next());
+            req.vertx().setTimer(5000, tid -> req.next());
         });
 
-        route.handler(ctx -> {
+        route.handler(req -> {
 
-            HttpServerResponse response = ctx.response();
-            response.write("route3");
+            HttpServerResponse response = req.response();
+            response.write("Response from 3rd five second ");
 
             // Now end the response
-            ctx.response().end();
+            req.response().end();
         });
         server.requestHandler(router).listen(8081);
     }
